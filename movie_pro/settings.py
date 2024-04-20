@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'movie_app',
+    'filme_app',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'filme_app.novos_context.lista_filmes_recentes',
+                'filme_app.novos_context.lista_filmes_emalta',
+                'filme_app.novos_context.filme_destaque',
             ],
         },
     },
