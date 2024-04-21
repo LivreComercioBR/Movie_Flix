@@ -4,16 +4,17 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from .models import Filme
 from django.views.generic import DetailView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class Homefilmes(ListView):
+class Homefilmes(LoginRequiredMixin, ListView):
     # O objetivo desta classe é exibir uma lista de objetos.
     template_name = 'homefilmes.html'
     model = Filme
     # ela vai me passar um contexto em forma de object_list
 
 
-class DetalhesFilme(DetailView):
+class DetalhesFilme(LoginRequiredMixin, DetailView):
     template_name = 'detalhes_filme.html'
     model = Filme
 
@@ -24,6 +25,8 @@ class DetalhesFilme(DetailView):
         filme.visualizacoes += 1
         # agora preciso salvar a alteração no banco de dados
         filme.save()
+        usuario = request.user
+        usuario.filmes_vistos.add(filme)
 
         return super().get(request, *args, **kwargs)
         # aqui ele redireciona o usuário para a url final
@@ -40,7 +43,7 @@ class DetalhesFilme(DetailView):
     # Esta classe ao contrário da listview ela me passa somente um object. Funciona como na função get_object.
 
 
-class PesquisarFilme(ListView):
+class PesquisarFilme(LoginRequiredMixin, ListView):
     template_name = 'pesquisarfilme.html'
     model = Filme
 
@@ -52,5 +55,3 @@ class PesquisarFilme(ListView):
             return object_list
         else:
             return None
-
-    # nome_filme = Filme.objects.all()
