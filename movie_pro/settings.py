@@ -1,3 +1,4 @@
+import dj_database_url
 from pathlib import Path
 import dj_database_url
 import os
@@ -30,11 +31,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'movie_app',
+    'filme_app',
+    'crispy_forms',
+    'crispy_bootstrap5',
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,6 +61,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'filme_app.novos_context.lista_filmes_recentes',
+                'filme_app.novos_context.lista_filmes_emalta',
+                'filme_app.novos_context.filme_destaque',
             ],
         },
     },
@@ -66,6 +74,7 @@ WSGI_APPLICATION = 'movie_pro.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
 
 DATABASES = {
     'default': {
@@ -85,6 +94,12 @@ if 'DATABASE_URL' in os.environ:
         conn_max_age=1800,
         conn_health_checks=True,
     )
+
+DATABASE_URL = os.getenv("MYSQLDATABASE")
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=1800)
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -122,7 +137,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join('media')
@@ -144,3 +163,11 @@ MESSAGE_TAGS = {
 }
 
 AUTH_USER_MODEL = 'movie_app.User'
+
+LOGIN_REDIRECT_URL = 'filme_app:homefilmes'
+
+LOGIN_URL = 'movie_app:login'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
