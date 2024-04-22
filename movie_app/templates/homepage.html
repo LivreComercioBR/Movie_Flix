@@ -2,8 +2,20 @@
 {% load static %}
 
 
+
 {% block 'title' %}
 Homepage
+{% endblock %}
+
+{% block 'head' %}
+<style>
+    #id_email {
+        width: 120%;
+        font-size: 16px;
+        padding: 0.7rem;
+        color: #000000
+    }
+</style>
 {% endblock %}
 
 {% block 'content' %}
@@ -25,12 +37,12 @@ Homepage
         </h4>
 
         <div class="w-full flex justify-center">
-            <div class="flex justify-center items-center w-11/12 md:w-10/12">
-                <form method="post" class="w-6/12 justify-center">
+            <div class="flex justify-center items-center w-11/12 md:w-11/12">
+                <form method="POST" class="w-6/12 justify-center">{% csrf_token %}
                     <div class="flex flex-grow items-stretch">
-                        <input type="text" class="py-1 px-2 rounded-md mr-2 text-black">
+                        {{ form }}
                         <button
-                            class="bg-red-600 font-medium md:font-normal flex justify-center items-center py-2 px-3 md:px-0 rounded-br-sm rounded-tr-sm md:text-2xl"
+                            class="bg-red-600 font-medium md:font-normal flex justify-center items-center py-2 px-3 md:px-0 rounded-br-sm rounded-tr-sm md:text-2xl ml-12"
                             type="submit">
                             <span>
                                 Acessar
@@ -39,7 +51,7 @@ Homepage
                         </button>
                     </div>
                 </form>
-                </a>
+
             </div>
         </div>
 

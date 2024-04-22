@@ -30,6 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'movie_app',
     'filme_app',
+    'crispy_forms',
+    'crispy_bootstrap5',
+
 ]
 
 MIDDLEWARE = [
@@ -139,3 +142,11 @@ MESSAGE_TAGS = {
 }
 
 AUTH_USER_MODEL = 'movie_app.User'
+
+LOGIN_REDIRECT_URL = 'filme_app:homefilmes'
+
+LOGIN_URL = 'movie_app:login'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
