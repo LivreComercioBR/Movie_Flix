@@ -1,4 +1,5 @@
 from pathlib import Path
+import dj_database_url
 import os
 from django.contrib import messages
 from django.contrib.messages import constants
@@ -16,7 +17,7 @@ SECRET_KEY = 'django-insecure-t0mv&e$==6j+*in(3ke^=(fz*+-1zvt-qpw5(d!5b*&31$s5xg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,6 +78,11 @@ DATABASES = {
     }
 }
 
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=1800,
+        conn_health_checks=True,
+    )
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -113,7 +120,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
-STATIC_ROOT = os.path.join('static')
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join('media')
