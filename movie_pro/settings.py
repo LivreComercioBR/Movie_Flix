@@ -5,6 +5,7 @@ import dj_database_url
 import os
 from django.contrib import messages
 from django.contrib.messages import constants
+import psycopg2
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,6 +92,11 @@ WSGI_APPLICATION = 'movie_pro.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
 
 if IS_HEROKU_APP:
     DATABASES = {
