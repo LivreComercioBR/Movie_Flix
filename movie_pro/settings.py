@@ -6,6 +6,9 @@ import os
 from django.contrib import messages
 from django.contrib.messages import constants
 import psycopg2
+import django_heroku
+
+django_heroku.settings(locals())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,6 +55,7 @@ INSTALLED_APPS = [
     'filme_app',
     'crispy_forms',
     'crispy_bootstrap5',
+    # 'django_heroku',
 
 ]
 
@@ -166,7 +170,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
