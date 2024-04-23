@@ -1,3 +1,4 @@
+import secrets
 import dj_database_url
 from pathlib import Path
 import dj_database_url
@@ -13,18 +14,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t0mv&e$==6j+*in(3ke^=(fz*+-1zvt-qpw5(d!5b*&31$s5xg'
+# SECRET_KEY = 'django-insecure-t0mv&e$==6j+*in(3ke^=(fz*+-1zvt-qpw5(d!5b*&31$s5xg'
+
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    default=secrets.token_urlsafe(nbytes=64),
+)
+
+IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+if not IS_HEROKU_APP:
+    DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1",
-                 "https://movieflixbr-3ff670d4d6fb.herokuapp.com/",]
+#  Allowed hosts
+if IS_HEROKU_APP:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = []
+
+# ALLOWED_HOSTS = ["127.0.0.1",
+#                  "https://movieflixbr-3ff670d4d6fb.herokuapp.com/",]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,17 +92,25 @@ WSGI_APPLICATION = 'movie_pro.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'movie_flix',
-        'USER': 'root',
-        'PASSWORD': 'Rv6041802009*',
-        'HOST': 'localhost',
-        'PORT': 3307,
+if IS_HEROKU_APP:
+    DATABASES = {
+        "default": dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        ),
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'movie_flix',
+            'USER': 'root',
+            'PASSWORD': 'Rv6041802009*',
+            'HOST': 'localhost',
+            'PORT': 3307,
+        }
+    }
 
 # DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -139,10 +163,21 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join('media')
+
+
+STORAGES = {
+    # Enable WhiteNoise's GZip and Brotli compression of static assets:
+    # https://whitenoise.readthedocs.io/en/latest/django.html#add-compression-and-caching-support
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 
 # Default primary key field type
