@@ -18,7 +18,8 @@ SECRET_KEY = 'django-insecure-t0mv&e$==6j+*in(3ke^=(fz*+-1zvt-qpw5(d!5b*&31$s5xg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["127.0.0.1",
+                 "https://movieflixbr-3ff670d4d6fb.herokuapp.com/",]
 
 
 # Application definition
