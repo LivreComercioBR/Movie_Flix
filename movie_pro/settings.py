@@ -6,9 +6,7 @@ import os
 from django.contrib import messages
 from django.contrib.messages import constants
 import psycopg2
-import django_heroku
 
-django_heroku.settings(locals())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,17 +23,14 @@ SECRET_KEY = os.environ.get(
     default=secrets.token_urlsafe(nbytes=64),
 )
 
-IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
+# IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if not IS_HEROKU_APP:
-    DEBUG = True
+
+DEBUG = True
 
 #  Allowed hosts
-if IS_HEROKU_APP:
-    ALLOWED_HOSTS = ["*"]
-else:
-    ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # ALLOWED_HOSTS = ["127.0.0.1",
 #                  "https://movieflixbr-3ff670d4d6fb.herokuapp.com/",]
@@ -99,28 +94,24 @@ WSGI_APPLICATION = 'movie_pro.wsgi.application'
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         conn_max_age=600,
+#         conn_health_checks=True,
+#         ssl_require=True,
+#     ),
+# }
 
-
-if IS_HEROKU_APP:
-    DATABASES = {
-        "default": dj_database_url.config(
-            conn_max_age=600,
-            conn_health_checks=True,
-            ssl_require=True,
-        ),
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'movie_flix',
+        'USER': 'root',
+        'PASSWORD': 'Rv6041802009*',
+        'HOST': 'localhost',
+        'PORT': 3307,
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'movie_flix',
-            'USER': 'root',
-            'PASSWORD': 'Rv6041802009*',
-            'HOST': 'localhost',
-            'PORT': 3307,
-        }
-    }
+}
 
 # DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -179,15 +170,15 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join('media')
 
 
-STORAGES = {
-    # Enable WhiteNoise's GZip and Brotli compression of static assets:
-    # https://whitenoise.readthedocs.io/en/latest/django.html#add-compression-and-caching-support
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+# STORAGES = {
+#     # Enable WhiteNoise's GZip and Brotli compression of static assets:
+#     # https://whitenoise.readthedocs.io/en/latest/django.html#add-compression-and-caching-support
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
 
-WHITENOISE_KEEP_ONLY_HASHED_FILES = True
+# WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 
 # Default primary key field type
